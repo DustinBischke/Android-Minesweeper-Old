@@ -9,12 +9,24 @@
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        style="@style/Background">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="buttonNewGame"
+            android:text="New Game" />
 
         <LinearLayout
-            android:id="@+id/board_layout"
-            style="@style/Board" />
+            android:id="@+id/screen_main"
+            style="@style/Screen">
 
+            <LinearLayout
+                android:id="@+id/board_layout"
+                style="@style/Board" />
+        </LinearLayout>
     </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

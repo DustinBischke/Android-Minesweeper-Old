@@ -49,6 +49,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void buttonNewGame(View view)
+    {
+        createBoardLayout(10, 10);
+    }
+
     private void createBoardLayout(int rows, int columns)
     {
         DisplayMetrics displayMetrics = new DisplayMetrics();

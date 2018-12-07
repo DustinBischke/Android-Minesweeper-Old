@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.AppCompatButton;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -166,6 +167,7 @@ class Cell extends AppCompatButton
 {
     private Coordinate coordinate;
     private boolean active;
+    private boolean flag;
     private boolean mine;
     private int nearbyMines;
 
@@ -173,9 +175,11 @@ class Cell extends AppCompatButton
     {
         super(context);
         active = false;
+        flag = false;
         mine = false;
         this.coordinate = coordinate;
         setColor(R.color.colorBoard);
+        setPadding(0, 0, 0, 0);
     }
 
     public Coordinate getCoordinate()
@@ -193,6 +197,25 @@ class Cell extends AppCompatButton
         this.active = active;
     }
 
+    public boolean isFlag()
+    {
+        return flag;
+    }
+
+    public void setFlag(boolean flag)
+    {
+        this.flag = flag;
+
+        if (flag)
+        {
+            setColor(R.color.colorFlag);
+        }
+        else
+        {
+            setColor(R.color.colorBoard);
+        }
+    }
+
     public boolean isMine()
     {
         return mine;
@@ -201,7 +224,15 @@ class Cell extends AppCompatButton
     public void setMine(boolean mine)
     {
         this.mine = mine;
-        setColor(R.color.colorMine);
+
+        if (mine)
+        {
+            setColor(R.color.colorMine);
+        }
+        else
+        {
+            setColor(R.color.colorBoard);
+        }
     }
 
     public int getNearbyMines()
