@@ -3,7 +3,7 @@ package ca.bischke.apps.minesweeper;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.AppCompatButton;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -50,6 +50,7 @@ public class Board extends TableLayout
         }
 
         placeMines();
+        calculateNearbyMines();
     }
 
     public void placeMines()
@@ -63,11 +64,96 @@ public class Board extends TableLayout
                 int x = random.nextInt(columns);
                 int y = random.nextInt(rows);
 
-                if (!cells[x][y].hasMine())
+                if (!cells[x][y].isMine())
                 {
                     cells[x][y].setMine(true);
                     valid = true;
                 }
+            }
+        }
+    }
+
+    public void calculateNearbyMines()
+    {
+        for (int i = 0; i < columns; i++)
+        {
+            for (int j = 0; j < rows; j++)
+            {
+                int nearbyMines = 0;
+
+                // Top
+                if (j > 0)
+                {
+                    if (cells[i][j - 1].isMine())
+                    {
+                        nearbyMines += 1;
+                    }
+                }
+
+                // Bottom
+                if (j < rows - 1)
+                {
+                    if (cells[i][j + 1].isMine())
+                    {
+                        nearbyMines += 1;
+                    }
+                }
+
+                // Left
+                if (i > 0)
+                {
+                    if (cells[i - 1][j].isMine())
+                    {
+                        nearbyMines += 1;
+                    }
+
+                    // Top Left Corner
+                    if (j > 0)
+                    {
+                        if (cells[i - 1][j - 1].isMine())
+                        {
+                            nearbyMines += 1;
+                        }
+                    }
+
+                    // Bottom Left Corner
+                    if (j < rows - 1)
+                    {
+                        if (cells[i - 1][j + 1].isMine())
+                        {
+                            nearbyMines += 1;
+                        }
+                    }
+                }
+
+                // Right
+                if (i < columns - 1)
+                {
+                    if (cells[i + 1][j].isMine())
+                    {
+                        nearbyMines += 1;
+                    }
+
+                    // Top Right Corner
+                    if (j > 0)
+                    {
+                        if (cells[i + 1][j - 1].isMine())
+                        {
+                            nearbyMines += 1;
+                        }
+                    }
+
+                    // Bottom Right Corner
+                    if (j < rows - 1)
+                    {
+                        if (cells[i + 1][j + 1].isMine())
+                        {
+                            nearbyMines += 1;
+                        }
+                    }
+                }
+
+                cells[i][j].setNearbyMines(nearbyMines);
             }
         }
     }
@@ -76,11 +162,12 @@ public class Board extends TableLayout
 
 @SuppressLint("ViewConstructor")
 
-class Cell extends AppCompatImageButton
+class Cell extends AppCompatButton
 {
     private Coordinate coordinate;
     private boolean active;
     private boolean mine;
+    private int nearbyMines;
 
     Cell(Context context, Coordinate coordinate)
     {
@@ -89,8 +176,6 @@ class Cell extends AppCompatImageButton
         mine = false;
         this.coordinate = coordinate;
         setColor(R.color.colorBoard);
-        setPadding(0, 0, 0, 0);
-        setScaleType(ScaleType.FIT_CENTER);
     }
 
     public Coordinate getCoordinate()
@@ -108,7 +193,7 @@ class Cell extends AppCompatImageButton
         this.active = active;
     }
 
-    public boolean hasMine()
+    public boolean isMine()
     {
         return mine;
     }
@@ -119,6 +204,17 @@ class Cell extends AppCompatImageButton
         setColor(R.color.colorMine);
     }
 
+    public int getNearbyMines()
+    {
+        return nearbyMines;
+    }
+
+    public void setNearbyMines(int nearbyMines)
+    {
+        this.nearbyMines = nearbyMines;
+        setText(String.valueOf(nearbyMines));
+    }
+
     public void setColor(int color)
     {
         GradientDrawable drawable = new GradientDrawable();
@@ -126,10 +222,5 @@ class Cell extends AppCompatImageButton
         drawable.setStroke(4, getResources().getColor(R.color.colorStroke));
         drawable.setColor(getResources().getColor(color));
         setBackgroundDrawable(drawable);
-    }
-
-    public void setImage(int image)
-    {
-        setImageResource(image);
     }
 }
