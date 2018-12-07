@@ -23,6 +23,6 @@
     <color name="colorBoard">#303653</color>
     <color name="colorTargetOuter">#3F4473</color>
     <color name="colorTargetInner">#616CAC</color>
-    <color name="colorShip">#90ABED</color>
-    <color name="colorCollision">#F43333</color>
+    <color name="colorBoardAccent">#90ABED</color>
+    <color name="colorMine">#F43333</color>
 </resources>

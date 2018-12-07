@@ -8,20 +8,25 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import java.util.Random;
+
 @SuppressLint("ViewConstructor")
 
 public class Board extends TableLayout
 {
+    private Random random = new Random();
     private Cell[][] cells;
     private int rows;
     private int columns;
+    private int mines;
 
-    public Board(Context context, int rows, int columns, int buttonWidth)
+    public Board(Context context, int rows, int columns, int mines, int buttonWidth)
     {
         super(context);
         this.rows = rows;
         this.columns = columns;
         this.cells = new Cell[columns][rows];
+        this.mines = mines;
 
         // Creates Grid of Cells
         for (int i = 0; i < rows; i++)
@@ -43,6 +48,28 @@ public class Board extends TableLayout
                 row.addView(layout);
             }
         }
+
+        placeMines();
+    }
+
+    public void placeMines()
+    {
+        for (int i = 0; i < mines; i++)
+        {
+            boolean valid = false;
+
+            while(!valid)
+            {
+                int x = random.nextInt(columns);
+                int y = random.nextInt(rows);
+
+                if (!cells[x][y].hasMine())
+                {
+                    cells[x][y].setMine(true);
+                    valid = true;
+                }
+            }
+        }
     }
 }
 
@@ -52,11 +79,14 @@ public class Board extends TableLayout
 class Cell extends AppCompatImageButton
 {
     private Coordinate coordinate;
-    boolean clicked = false;
+    private boolean active;
+    private boolean mine;
 
     Cell(Context context, Coordinate coordinate)
     {
         super(context);
+        active = false;
+        mine = false;
         this.coordinate = coordinate;
         setColor(R.color.colorBoard);
         setPadding(0, 0, 0, 0);
@@ -68,14 +98,25 @@ class Cell extends AppCompatImageButton
         return coordinate;
     }
 
-    public boolean isClicked()
+    public boolean isActive()
     {
-        return clicked;
+        return active;
     }
 
-    public void setClicked(boolean clicked)
+    public void setActive(boolean active)
     {
-        this.clicked = clicked;
+        this.active = active;
+    }
+
+    public boolean hasMine()
+    {
+        return mine;
+    }
+
+    public void setMine(boolean mine)
+    {
+        this.mine = mine;
+        setColor(R.color.colorMine);
     }
 
     public void setColor(int color)

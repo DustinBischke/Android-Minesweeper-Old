@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
         int displayWidth = displayMetrics.widthPixels;
         int buttonSize = displayWidth / (columns + 1);
 
-        board = new Board(this, rows, columns, buttonSize);
+        board = new Board(this, rows, columns, 20, buttonSize);
 
         LinearLayout boardLayout = findViewById(R.id.board_layout);
         boardLayout.removeAllViewsInLayout();
