@@ -54,9 +54,11 @@ public class Board extends TableLayout
                     @Override
                     public void onClick(View view)
                     {
+                        Cell cell = ((Cell)view);
+
                         if (firstTurn)
                         {
-                            placeMines();
+                            placeMines(cell);
                             calculateNearbyMines();
 
                             firstTurn = false;
@@ -64,8 +66,6 @@ public class Board extends TableLayout
 
                         if (!gameOver)
                         {
-                            Cell cell = ((Cell)view);
-
                             if (!cell.isFlag())
                             {
                                 cell.setActive(true);
@@ -201,8 +201,12 @@ public class Board extends TableLayout
         }
     }
 
-    public void placeMines()
+    public void placeMines(Cell cell)
     {
+        Coordinate coordinate = cell.getCoordinate();
+        ArrayList<Cell> invalid = getNeighbours(cells[coordinate.getX()][coordinate.getY()]);
+        invalid.add(cell);
+
         for (int i = 0; i < mines; i++)
         {
             boolean valid = false;
@@ -212,7 +216,7 @@ public class Board extends TableLayout
                 int x = random.nextInt(columns);
                 int y = random.nextInt(rows);
 
-                if (!cells[x][y].isMine())
+                if (!invalid.contains(cells[x][y]) && !cells[x][y].isMine())
                 {
                     cells[x][y].setMine(true);
                     valid = true;
