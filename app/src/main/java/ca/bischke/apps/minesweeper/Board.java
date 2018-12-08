@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 @SuppressLint("ViewConstructor")
@@ -17,17 +18,19 @@ public class Board extends TableLayout
 {
     private Random random = new Random();
     private Cell[][] cells;
-    private int rows;
     private int columns;
+    private int rows;
     private int mines;
+    private boolean gameOver;
 
-    public Board(Context context, int rows, int columns, int mines, int buttonWidth)
+    public Board(Context context, int columns, int rows, int buttonWidth)
     {
         super(context);
-        this.rows = rows;
         this.columns = columns;
+        this.rows = rows;
         this.cells = new Cell[columns][rows];
-        this.mines = mines;
+        mines = (rows * columns) / 5;
+        gameOver = false;
 
         // Creates Grid of Cells
         for (int i = 0; i < rows; i++)
@@ -44,6 +47,40 @@ public class Board extends TableLayout
                 final Cell cell = new Cell(context, new Coordinate(j, i));
                 cell.setLayoutParams(buttonLayoutParams);
 
+                cell.setOnClickListener(new OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        if (!gameOver)
+                        {
+                            Cell cell = ((Cell)view);
+                            cell.setActive(true);
+
+                            if (cell.isMine())
+                            {
+                                displayAllMines();
+                                gameOver = true;
+                                return;
+                            }
+                            else
+                            {
+                                if (cell.getNearbyMines() == 0)
+                                {
+                                    activateNeighbours(cell);
+                                }
+                                else
+                                {
+                                    cell.displayText();
+                                }
+
+                                cell.setActive(false);
+                                cell.setColor(R.color.colorInactive);
+                            }
+                        }
+                    }
+                });
+
                 cells[j][i] = cell;
                 layout.addView(cells[j][i]);
                 row.addView(layout);
@@ -52,6 +89,90 @@ public class Board extends TableLayout
 
         placeMines();
         calculateNearbyMines();
+    }
+
+    public ArrayList<Cell> getNeighbours(Cell cell)
+    {
+        ArrayList<Cell> neighbours = new ArrayList<>();
+        Coordinate coordinate = cell.getCoordinate();
+        int i = coordinate.getX();
+        int j = coordinate.getY();
+
+        if (j > 0)
+        {
+            neighbours.add(cells[i][j - 1]);
+        }
+
+        // Bottom
+        if (j < rows - 1)
+        {
+            neighbours.add(cells[i][j + 1]);
+        }
+
+        // Left
+        if (i > 0)
+        {
+            neighbours.add(cells[i - 1][j]);
+
+            // Top Left Corner
+            if (j > 0)
+            {
+                neighbours.add(cells[i - 1][j - 1]);
+            }
+
+            // Bottom Left Corner
+            if (j < rows - 1)
+            {
+                neighbours.add(cells[i - 1][j + 1]);
+            }
+        }
+
+        // Right
+        if (i < columns - 1)
+        {
+            neighbours.add(cells[i + 1][j]);
+
+            // Top Right Corner
+            if (j > 0)
+            {
+                neighbours.add(cells[i + 1][j - 1]);
+            }
+
+            // Bottom Right Corner
+            if (j < rows - 1)
+            {
+                neighbours.add(cells[i + 1][j + 1]);
+            }
+        }
+
+        return neighbours;
+    }
+
+    public void activateNeighbours(Cell cell)
+    {
+        Coordinate coordinate = cell.getCoordinate();
+        int i = coordinate.getX();
+        int j = coordinate.getY();
+
+        ArrayList<Cell> neighbours = getNeighbours(cells[i][j]);
+
+        for (Cell neighbor : neighbours)
+        {
+            if (neighbor.isActive())
+            {
+                neighbor.setActive(false);
+                neighbor.setColor(R.color.colorInactive);
+
+                if (neighbor.getNearbyMines() == 0)
+                {
+                    activateNeighbours(neighbor);
+                }
+                else
+                {
+                    neighbor.displayText();
+                }
+            }
+        }
     }
 
     public void placeMines()
@@ -80,81 +201,32 @@ public class Board extends TableLayout
         {
             for (int j = 0; j < rows; j++)
             {
+                ArrayList<Cell> neighbours = getNeighbours(cells[i][j]);
                 int nearbyMines = 0;
 
-                // Top
-                if (j > 0)
+                for (Cell neighbor : neighbours)
                 {
-                    if (cells[i][j - 1].isMine())
+                    if (neighbor.isMine())
                     {
                         nearbyMines += 1;
-                    }
-                }
-
-                // Bottom
-                if (j < rows - 1)
-                {
-                    if (cells[i][j + 1].isMine())
-                    {
-                        nearbyMines += 1;
-                    }
-                }
-
-                // Left
-                if (i > 0)
-                {
-                    if (cells[i - 1][j].isMine())
-                    {
-                        nearbyMines += 1;
-                    }
-
-                    // Top Left Corner
-                    if (j > 0)
-                    {
-                        if (cells[i - 1][j - 1].isMine())
-                        {
-                            nearbyMines += 1;
-                        }
-                    }
-
-                    // Bottom Left Corner
-                    if (j < rows - 1)
-                    {
-                        if (cells[i - 1][j + 1].isMine())
-                        {
-                            nearbyMines += 1;
-                        }
-                    }
-                }
-
-                // Right
-                if (i < columns - 1)
-                {
-                    if (cells[i + 1][j].isMine())
-                    {
-                        nearbyMines += 1;
-                    }
-
-                    // Top Right Corner
-                    if (j > 0)
-                    {
-                        if (cells[i + 1][j - 1].isMine())
-                        {
-                            nearbyMines += 1;
-                        }
-                    }
-
-                    // Bottom Right Corner
-                    if (j < rows - 1)
-                    {
-                        if (cells[i + 1][j + 1].isMine())
-                        {
-                            nearbyMines += 1;
-                        }
                     }
                 }
 
                 cells[i][j].setNearbyMines(nearbyMines);
+            }
+        }
+    }
+
+    public void displayAllMines()
+    {
+        for (int i = 0; i < columns; i++)
+        {
+            for (int j = 0; j < rows; j++)
+            {
+                if (cells[i][j].isMine())
+                {
+                    cells[i][j].setColor(R.color.colorMine);
+                }
             }
         }
     }
@@ -174,7 +246,7 @@ class Cell extends AppCompatButton
     Cell(Context context, Coordinate coordinate)
     {
         super(context);
-        active = false;
+        active = true;
         flag = false;
         mine = false;
         this.coordinate = coordinate;
@@ -210,10 +282,6 @@ class Cell extends AppCompatButton
         {
             setColor(R.color.colorFlag);
         }
-        else
-        {
-            setColor(R.color.colorBoard);
-        }
     }
 
     public boolean isMine()
@@ -224,15 +292,6 @@ class Cell extends AppCompatButton
     public void setMine(boolean mine)
     {
         this.mine = mine;
-
-        if (mine)
-        {
-            setColor(R.color.colorMine);
-        }
-        else
-        {
-            setColor(R.color.colorBoard);
-        }
     }
 
     public int getNearbyMines()
@@ -243,7 +302,6 @@ class Cell extends AppCompatButton
     public void setNearbyMines(int nearbyMines)
     {
         this.nearbyMines = nearbyMines;
-        setText(String.valueOf(nearbyMines));
     }
 
     public void setColor(int color)
@@ -253,5 +311,10 @@ class Cell extends AppCompatButton
         drawable.setStroke(4, getResources().getColor(R.color.colorStroke));
         drawable.setColor(getResources().getColor(color));
         setBackgroundDrawable(drawable);
+    }
+
+    public void displayText()
+    {
+        setText(String.valueOf(nearbyMines));
     }
 }

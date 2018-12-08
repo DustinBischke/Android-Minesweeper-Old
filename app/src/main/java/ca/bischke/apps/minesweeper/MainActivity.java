@@ -54,14 +54,14 @@ public class MainActivity extends AppCompatActivity
         createBoardLayout(10, 10);
     }
 
-    private void createBoardLayout(int rows, int columns)
+    private void createBoardLayout(int columns, int rows)
     {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int displayWidth = displayMetrics.widthPixels;
         int buttonSize = displayWidth / (columns + 1);
 
-        board = new Board(this, rows, columns, 20, buttonSize);
+        board = new Board(this, columns, rows, buttonSize);
 
         LinearLayout boardLayout = findViewById(R.id.board_layout);
         boardLayout.removeAllViewsInLayout();
