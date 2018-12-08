@@ -88,6 +88,12 @@ public class Board extends TableLayout
 
                                     cell.setActive(false);
                                     cell.setColor(R.color.colorInactive);
+
+                                    if (allMinesFound())
+                                    {
+                                        win();
+                                        gameOver = true;
+                                    }
                                 }
                             }
                         }
@@ -260,6 +266,36 @@ public class Board extends TableLayout
             }
         }
     }
+
+    public boolean allMinesFound()
+    {
+        for (int i = 0; i < columns; i++)
+        {
+            for (int j = 0; j < rows; j++)
+            {
+                if (cells[i][j].isActive() && !cells[i][j].isMine())
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public void win()
+    {
+        for (int i = 0; i < columns; i++)
+        {
+            for (int j = 0; j < rows; j++)
+            {
+                if (cells[i][j].isMine())
+                {
+                    cells[i][j].setColor(R.color.colorWin);
+                }
+            }
+        }
+    }
 }
 
 
@@ -281,6 +317,7 @@ class Cell extends AppCompatButton
         mine = false;
         this.coordinate = coordinate;
         setColor(R.color.colorBoard);
+        setTextSize(16);
         setPadding(0, 0, 0, 0);
     }
 
@@ -310,11 +347,12 @@ class Cell extends AppCompatButton
 
         if (flag)
         {
-            setColor(R.color.colorFlag);
+            setText("F");
+            setTextColor(getResources().getColor(R.color.colorFlag));
         }
         else
         {
-            setColor(R.color.colorBoard);
+            setText("");
         }
     }
 

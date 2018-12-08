@@ -21,15 +21,16 @@
     <color name="colorText">#E5E5E5</color>
     <color name="colorTextAccent">#A9BEF0</color>
     <color name="colorBoard">#303653</color>
-    <color name="colorInactive">#252B46</color>
-    <color name="colorFlag">#90ABED</color>
+    <color name="colorInactive">#1F243B</color>
+    <color name="colorFlag">#E5E5E5</color>
     <color name="colorMine">#F43333</color>
-    <color name="color1">#d67627</color>
-    <color name="color2">#b4b036</color>
-    <color name="color3">#57c43a</color>
-    <color name="color4">#3abb9b</color>
-    <color name="color5">#3876de</color>
-    <color name="color6">#673ad9</color>
-    <color name="color7">#c846b4</color>
-    <color name="color8">#d93636</color>
+    <color name="colorWin">#48D31D</color>
+    <color name="color1">#D67627</color>
+    <color name="color2">#B4B036</color>
+    <color name="color3">#57C43A</color>
+    <color name="color4">#3ABB9B</color>
+    <color name="color5">#3876DE</color>
+    <color name="color6">#673AD9</color>
+    <color name="color7">#C846B4</color>
+    <color name="color8">#D93636</color>
 </resources>
