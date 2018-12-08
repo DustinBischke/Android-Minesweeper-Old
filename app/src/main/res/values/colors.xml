@@ -21,7 +21,15 @@
     <color name="colorText">#E5E5E5</color>
     <color name="colorTextAccent">#A9BEF0</color>
     <color name="colorBoard">#303653</color>
-    <color name="colorInactive">#3F4473</color>
+    <color name="colorInactive">#252B46</color>
     <color name="colorFlag">#90ABED</color>
     <color name="colorMine">#F43333</color>
+    <color name="color1">#d67627</color>
+    <color name="color2">#b4b036</color>
+    <color name="color3">#57c43a</color>
+    <color name="color4">#3abb9b</color>
+    <color name="color5">#3876de</color>
+    <color name="color6">#673ad9</color>
+    <color name="color7">#c846b4</color>
+    <color name="color8">#d93636</color>
 </resources>
