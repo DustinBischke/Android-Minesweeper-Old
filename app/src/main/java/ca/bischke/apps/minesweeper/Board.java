@@ -127,53 +127,53 @@ public class Board extends TableLayout
     {
         ArrayList<Cell> neighbours = new ArrayList<>();
         Coordinate coordinate = cell.getCoordinate();
-        int i = coordinate.getX();
-        int j = coordinate.getY();
+        int x = coordinate.getX();
+        int y = coordinate.getY();
 
-        if (j > 0)
+        if (y > 0)
         {
-            neighbours.add(cells[i][j - 1]);
+            neighbours.add(cells[x][y - 1]);
         }
 
         // Bottom
-        if (j < rows - 1)
+        if (y < rows - 1)
         {
-            neighbours.add(cells[i][j + 1]);
+            neighbours.add(cells[x][y + 1]);
         }
 
         // Left
-        if (i > 0)
+        if (x > 0)
         {
-            neighbours.add(cells[i - 1][j]);
+            neighbours.add(cells[x - 1][y]);
 
             // Top Left Corner
-            if (j > 0)
+            if (y > 0)
             {
-                neighbours.add(cells[i - 1][j - 1]);
+                neighbours.add(cells[x - 1][y - 1]);
             }
 
             // Bottom Left Corner
-            if (j < rows - 1)
+            if (y < rows - 1)
             {
-                neighbours.add(cells[i - 1][j + 1]);
+                neighbours.add(cells[x - 1][y + 1]);
             }
         }
 
         // Right
-        if (i < columns - 1)
+        if (x < columns - 1)
         {
-            neighbours.add(cells[i + 1][j]);
+            neighbours.add(cells[x + 1][y]);
 
             // Top Right Corner
-            if (j > 0)
+            if (y > 0)
             {
-                neighbours.add(cells[i + 1][j - 1]);
+                neighbours.add(cells[x + 1][y - 1]);
             }
 
             // Bottom Right Corner
-            if (j < rows - 1)
+            if (y < rows - 1)
             {
-                neighbours.add(cells[i + 1][j + 1]);
+                neighbours.add(cells[x + 1][y + 1]);
             }
         }
 
@@ -183,10 +183,10 @@ public class Board extends TableLayout
     public void activateNeighbours(Cell cell)
     {
         Coordinate coordinate = cell.getCoordinate();
-        int i = coordinate.getX();
-        int j = coordinate.getY();
+        int x = coordinate.getX();
+        int y = coordinate.getY();
 
-        ArrayList<Cell> neighbours = getNeighbours(cells[i][j]);
+        ArrayList<Cell> neighbours = getNeighbours(cells[x][y]);
 
         for (Cell neighbor : neighbours)
         {
