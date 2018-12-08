@@ -21,6 +21,7 @@ public class Board extends TableLayout
     private int columns;
     private int rows;
     private int mines;
+    private boolean firstTurn;
     private boolean gameOver;
 
     public Board(Context context, int columns, int rows, int buttonWidth)
@@ -30,6 +31,7 @@ public class Board extends TableLayout
         this.rows = rows;
         this.cells = new Cell[columns][rows];
         mines = (rows * columns) / 5;
+        firstTurn = true;
         gameOver = false;
 
         // Creates Grid of Cells
@@ -52,32 +54,59 @@ public class Board extends TableLayout
                     @Override
                     public void onClick(View view)
                     {
+                        if (firstTurn)
+                        {
+                            placeMines();
+                            calculateNearbyMines();
+
+                            firstTurn = false;
+                        }
+
                         if (!gameOver)
                         {
                             Cell cell = ((Cell)view);
-                            cell.setActive(true);
 
-                            if (cell.isMine())
+                            if (!cell.isFlag())
                             {
-                                displayAllMines();
-                                gameOver = true;
-                                return;
-                            }
-                            else
-                            {
-                                if (cell.getNearbyMines() == 0)
+                                cell.setActive(true);
+
+                                if (cell.isMine())
                                 {
-                                    activateNeighbours(cell);
+                                    displayAllMines();
+                                    gameOver = true;
                                 }
                                 else
                                 {
-                                    cell.displayText();
-                                }
+                                    if (cell.getNearbyMines() == 0)
+                                    {
+                                        activateNeighbours(cell);
+                                    }
+                                    else
+                                    {
+                                        cell.displayText();
+                                    }
 
-                                cell.setActive(false);
-                                cell.setColor(R.color.colorInactive);
+                                    cell.setActive(false);
+                                    cell.setColor(R.color.colorInactive);
+                                }
                             }
                         }
+                    }
+                });
+
+                cell.setOnLongClickListener(new OnLongClickListener()
+                {
+                    @Override
+                    public boolean onLongClick(View view)
+                    {
+                        Cell cell = ((Cell)view);
+
+                        if (cell.isActive())
+                        {
+                            cell.setFlag(!cell.isFlag());
+                        }
+
+                        return true;
                     }
                 });
 
@@ -86,9 +115,6 @@ public class Board extends TableLayout
                 row.addView(layout);
             }
         }
-
-        placeMines();
-        calculateNearbyMines();
     }
 
     public ArrayList<Cell> getNeighbours(Cell cell)
@@ -281,6 +307,10 @@ class Cell extends AppCompatButton
         if (flag)
         {
             setColor(R.color.colorFlag);
+        }
+        else
+        {
+            setColor(R.color.colorBoard);
         }
     }
 
