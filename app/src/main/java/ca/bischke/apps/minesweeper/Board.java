@@ -49,73 +49,6 @@ public class Board extends TableLayout
                 final Cell cell = new Cell(context, new Coordinate(j, i));
                 cell.setLayoutParams(buttonLayoutParams);
 
-                cell.setOnClickListener(new OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        Cell cell = ((Cell)view);
-
-                        if (firstTurn)
-                        {
-                            placeMines(cell);
-                            calculateNearbyMines();
-
-                            firstTurn = false;
-                        }
-
-                        if (!gameOver)
-                        {
-                            if (!cell.isFlag())
-                            {
-                                cell.setActive(true);
-
-                                if (cell.isMine())
-                                {
-                                    displayAllMines();
-                                    gameOver = true;
-                                }
-                                else
-                                {
-                                    if (cell.getNearbyMines() == 0)
-                                    {
-                                        activateNeighbours(cell);
-                                    }
-                                    else
-                                    {
-                                        cell.displayText();
-                                    }
-
-                                    cell.setActive(false);
-                                    cell.setColor(R.color.colorInactive);
-
-                                    if (allMinesFound())
-                                    {
-                                        win();
-                                        gameOver = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-
-                cell.setOnLongClickListener(new OnLongClickListener()
-                {
-                    @Override
-                    public boolean onLongClick(View view)
-                    {
-                        Cell cell = ((Cell)view);
-
-                        if (cell.isActive())
-                        {
-                            cell.setFlag(!cell.isFlag());
-                        }
-
-                        return true;
-                    }
-                });
-
                 cells[j][i] = cell;
                 layout.addView(cells[j][i]);
                 row.addView(layout);
@@ -123,9 +56,44 @@ public class Board extends TableLayout
         }
     }
 
+    public int getRows()
+    {
+        return rows;
+    }
+
+    public int getColumns()
+    {
+        return columns;
+    }
+
+    public Cell[][] getCells()
+    {
+        return cells;
+    }
+
     public int getMines()
     {
         return mines;
+    }
+
+    public boolean isFirstTurn()
+    {
+        return firstTurn;
+    }
+
+    public void setFirstTurn(boolean firstTurn)
+    {
+        this.firstTurn = firstTurn;
+    }
+
+    public boolean isGameOver()
+    {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver)
+    {
+        this.gameOver = gameOver;
     }
 
     public ArrayList<Cell> getNeighbours(Cell cell)
@@ -258,8 +226,10 @@ public class Board extends TableLayout
         }
     }
 
-    public void displayAllMines()
+    public void lose()
     {
+        gameOver = true;
+
         for (int i = 0; i < columns; i++)
         {
             for (int j = 0; j < rows; j++)
@@ -290,6 +260,8 @@ public class Board extends TableLayout
 
     public void win()
     {
+        gameOver = true;
+
         for (int i = 0; i < columns; i++)
         {
             for (int j = 0; j < rows; j++)
