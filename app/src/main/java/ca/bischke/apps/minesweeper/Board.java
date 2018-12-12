@@ -123,6 +123,11 @@ public class Board extends TableLayout
         }
     }
 
+    public int getMines()
+    {
+        return mines;
+    }
+
     public ArrayList<Cell> getNeighbours(Cell cell)
     {
         ArrayList<Cell> neighbours = new ArrayList<>();

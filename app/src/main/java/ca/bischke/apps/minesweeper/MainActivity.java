@@ -7,6 +7,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         hideSystemUI();
-        createBoardLayout(10, 10);
+        startNewGame();
     }
 
     @Override
@@ -51,7 +52,14 @@ public class MainActivity extends AppCompatActivity
 
     public void buttonNewGame(View view)
     {
+        startNewGame();
+    }
+
+    private void startNewGame()
+    {
         createBoardLayout(10, 10);
+        TextView mines = findViewById(R.id.text_mines_value);
+        mines.setText(String.format("%03d", board.getMines()));
     }
 
     private void createBoardLayout(int columns, int rows)
