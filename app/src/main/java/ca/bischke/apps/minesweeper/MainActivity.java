@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity
     private void startNewGame()
     {
         createBoardLayout(10, 10);
+        setFaceIcon(R.drawable.smile);
         setMineDisplay();
         stopTimer();
         time = 0;
@@ -128,8 +130,7 @@ public class MainActivity extends AppCompatActivity
 
                                 if (cell.isMine())
                                 {
-                                    stopTimer();
-                                    board.lose();
+                                    lose();
                                 }
                                 else
                                 {
@@ -147,8 +148,7 @@ public class MainActivity extends AppCompatActivity
 
                                     if (board.allMinesFound())
                                     {
-                                        stopTimer();
-                                        board.win();
+                                        win();
                                     }
                                 }
                             }
@@ -173,6 +173,26 @@ public class MainActivity extends AppCompatActivity
                 });
             }
         }
+    }
+
+    private void win()
+    {
+        board.win();
+        setFaceIcon(R.drawable.winner);
+        stopTimer();
+    }
+
+    private void lose()
+    {
+        board.lose();
+        setFaceIcon(R.drawable.loser);
+        stopTimer();
+    }
+
+    private void setFaceIcon(int image)
+    {
+        ImageButton faceIcon = findViewById(R.id.button_face_icon);
+        faceIcon.setImageResource(image);
     }
 
     private void setMineDisplay()

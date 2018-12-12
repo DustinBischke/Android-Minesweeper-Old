@@ -37,7 +37,7 @@
                 </LinearLayout>
 
                 <ImageButton
-                    android:id="@+id/imageButton"
+                    android:id="@+id/button_face_icon"
                     style="@style/FaceIcon"
                     android:onClick="buttonNewGame" />
 
