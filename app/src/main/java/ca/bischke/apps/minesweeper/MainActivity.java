@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "Minesweeper";
     private Board board;
     private int time;
+    private boolean inGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -32,6 +33,11 @@ public class MainActivity extends AppCompatActivity
     {
         Log.d(TAG, "onPause()");
         super.onPause();
+
+        if (inGame)
+        {
+            stopTimer();
+        }
     }
 
     @Override
@@ -39,6 +45,11 @@ public class MainActivity extends AppCompatActivity
     {
         Log.d(TAG, "onResume()");
         super.onResume();
+
+        if (inGame)
+        {
+            resumeTimer();
+        }
     }
 
     @Override
@@ -120,6 +131,7 @@ public class MainActivity extends AppCompatActivity
                             board.placeMines(cell);
                             board.calculateNearbyMines();
                             board.setFirstTurn(false);
+                            inGame = true;
                         }
 
                         if (!board.isGameOver())
@@ -180,6 +192,7 @@ public class MainActivity extends AppCompatActivity
         board.win();
         setFaceIcon(R.drawable.winner);
         stopTimer();
+        inGame = false;
     }
 
     private void lose()
@@ -187,6 +200,7 @@ public class MainActivity extends AppCompatActivity
         board.lose();
         setFaceIcon(R.drawable.loser);
         stopTimer();
+        inGame = false;
     }
 
     private void setFaceIcon(int image)
@@ -222,6 +236,12 @@ public class MainActivity extends AppCompatActivity
     {
         time = 0;
         setTimerDisplay();
+        handler.removeCallbacks(timer);
+        handler.postDelayed(timer, 1000);
+    }
+
+    private void resumeTimer()
+    {
         handler.removeCallbacks(timer);
         handler.postDelayed(timer, 1000);
     }
