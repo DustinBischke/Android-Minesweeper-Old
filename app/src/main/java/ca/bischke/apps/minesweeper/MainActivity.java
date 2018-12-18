@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity
 {
     private static final String TAG = "Minesweeper";
     private Board board;
+    private int mines;
     private int time;
     private boolean inGame;
 
@@ -87,9 +88,10 @@ public class MainActivity extends AppCompatActivity
     {
         createBoardLayout(10, 10);
         setFaceIcon(R.drawable.smile);
-        setMineDisplay();
         stopTimer();
+        mines = board.getMines();
         time = 0;
+        setMineDisplay();
         setTimerDisplay();
     }
 
@@ -175,9 +177,14 @@ public class MainActivity extends AppCompatActivity
                     {
                         Cell cell = ((Cell)view);
 
-                        if (cell.isActive())
+                        if (!board.isFirstTurn())
                         {
-                            cell.setFlag(!cell.isFlag());
+                            if (cell.isActive())
+                            {
+                                cell.setFlag(!cell.isFlag());
+                                mines += (cell.isFlag() ? -1 : 1);
+                                setMineDisplay();
+                            }
                         }
 
                         return true;
@@ -212,7 +219,7 @@ public class MainActivity extends AppCompatActivity
     private void setMineDisplay()
     {
         TextView minesView = findViewById(R.id.text_mines_value);
-        minesView.setText(String.format("%03d", board.getMines()));
+        minesView.setText(String.format("%03d", mines));
     }
 
     private void setTimerDisplay()
